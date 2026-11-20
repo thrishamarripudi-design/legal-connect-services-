@@ -1,0 +1,62 @@
+{
+  "info": {
+    "name": "LegalConnect Marketplace API v1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "End-to-end Postman test requests for Auth, Marketplace, Onboarding, Appointments, Case Requests, Payments, Reviews, and Admin Governance."
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000/api/v1" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1. Auth - Login Citizen",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"ananya.sharma@citizen.in\",\n  \"password\": \"Password@123\"\n}"
+        }
+      }
+    },
+    {
+      "name": "2. Marketplace - Search Verified Providers",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/marketplace/providers?maxFee=2000&sort=merit&page=0&size=9"
+      }
+    },
+    {
+      "name": "3. Marketplace - Provider Slots",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/marketplace/providers/1/slots?date=2026-11-25"
+      }
+    },
+    {
+      "name": "4. Appointments - Book Consultation",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/appointments",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"providerId\": 1,\n  \"serviceId\": 1,\n  \"scheduledDate\": \"2026-11-25\",\n  \"startTime\": \"10:00\",\n  \"mode\": \"VIDEO\",\n  \"notes\": \"Property title chain verification\"\n}"
+        }
+      }
+    },
+    {
+      "name": "5. Admin - Platform Analytics",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/admin/analytics"
+      }
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "name": "LegalConnect",
+  "description": "Digital Legal Services Marketplace and Case Assistance Platform with incentives-based provider onboarding.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

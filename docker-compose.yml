@@ -1,0 +1,46 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: legalconnect-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-legalconnect}
+      MYSQL_USER: ${DB_USER:-legalconnect_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-legalconnect_pass}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_pass_change_me}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+    container_name: legalconnect-backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SERVER_PORT: 8080
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME:-legalconnect}
+      DB_USER: ${DB_USER:-legalconnect_user}
+      DB_PASSWORD: ${DB_PASSWORD:-legalconnect_pass}
+      JWT_SECRET: ${JWT_SECRET:-replace-with-256-bit-random-secret-key}
+      UPLOAD_DIR: /app/uploads
+      PAYMENT_MODE: ${PAYMENT_MODE:-mock}
+    ports:
+      - "8080:8080"
+    volumes:
+      - upload_data:/app/uploads
+
+volumes:
+  mysql_data:
+  upload_data:
